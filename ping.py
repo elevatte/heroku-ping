@@ -2,11 +2,15 @@ import os
 import time
 import requests
 
-URL = os.environ['URL']
-TIMEOUT = int(os.environ['TIMEOUT'])
+URLS = os.environ.get('URLS')
+TIMEOUT = int(os.environ.get('TIMEOUT', 300))
+
+if not URLS:
+    raise Exception('URLS env var required')
 
 while True:
-    res = requests.get(URL)
-    print(f'{URL} {res}')
-    time.sleep(TIMEOUT)
-    
+    parsed_urls = URLS.split(',')
+    for url in parsed_urls:
+        res = requests.get(url)
+        print(f'{url} {res}')
+    time.sleep(TIMEOUT)    
